@@ -1,0 +1,14 @@
+
+{% extends 'base.html' %}
+{% block content %}
+  <h2>Bulk Upload Molds</h2>
+  <p>Upload an Excel file with columns: part_number, mold_number, cycle_time (in minutes), bom, num_operators</p>
+  <form method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+      <label for="excel" class="form-label">Excel File</label>
+      <input type="file" class="form-control" id="excel" name="excel" accept=".xlsx,.xls" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Upload</button>
+    <a href="{{ url_for('index') }}" class="btn btn-secondary">Cancel</a>
+  </form>
+{% endblock %}

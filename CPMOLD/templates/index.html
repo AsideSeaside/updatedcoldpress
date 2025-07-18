@@ -1,0 +1,19 @@
+
+{% extends 'base.html' %}
+{% block content %}
+  <form method="post" class="mb-3">
+    <div class="input-group">
+      <input type="text" name="query" class="form-control" placeholder="Search by part or mold number">
+      <button class="btn btn-primary" type="submit">Search</button>
+    </div>
+  </form>
+  {% if molds %}
+    <ul class="list-group">
+      {% for m in molds %}
+        <li class="list-group-item">
+          <a href="{{ url_for('detail', mold_id=m.id) }}">{{ m.part_number }} / {{ m.mold_number }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endblock %}

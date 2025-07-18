@@ -1,0 +1,38 @@
+
+{% extends 'base.html' %}
+{% block content %}
+  <h2>All Molds</h2>
+  {% if molds %}
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Part Number</th>
+            <th>Mold Number</th>
+            <th>Cycle Time (min)</th>
+            <th>Operators</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for mold in molds %}
+            <tr>
+              <td>{{ mold.part_number }}</td>
+              <td>{{ mold.mold_number }}</td>
+              <td>{{ mold.cycle_time }}</td>
+              <td>{{ mold.num_operators }}</td>
+              <td>
+                <a href="{{ url_for('detail', mold_id=mold.id) }}" class="btn btn-sm btn-primary">View Details</a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="alert alert-info">
+      <p>No molds found in the system.</p>
+      <a href="{{ url_for('add') }}" class="btn btn-primary">Add Your First Mold</a>
+    </div>
+  {% endif %}
+{% endblock %}

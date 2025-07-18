@@ -1,0 +1,19 @@
+
+{% extends 'base.html' %}
+{% block content %}
+  <h2>{{ mold.part_number }} / {{ mold.mold_number }}</h2>
+  <p><strong>Cycle Time:</strong> {{ mold.cycle_time }} min</p>
+  <p><strong>Operators:</strong> {{ mold.num_operators }}</p>
+  <p><strong>BOM:</strong><br>{{ mold.bom.replace('\n','<br>')|safe }}</p>
+  <div class="row">
+    {% for media in mold.media %}
+      <div class="col-md-4 mb-3">
+        {% if media.media_type=='image' %}
+          <img src="{{ media.url }}" class="img-fluid" />
+        {% else %}
+          <video src="{{ media.url }}" controls class="w-100"></video>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}

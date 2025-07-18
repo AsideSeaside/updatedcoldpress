@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h2>Edit Mold</h2>
+  <form method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+      <label for="part_number" class="form-label">Part Number</label>
+      <input type="text" class="form-control" id="part_number" name="part_number" value="{{ mold.part_number }}" required>
+    </div>
+    <div class="mb-3">
+      <label for="mold_number" class="form-label">Mold Number</label>
+      <input type="text" class="form-control" id="mold_number" name="mold_number" value="{{ mold.mold_number }}" required>
+    </div>
+    <div class="mb-3">
+      <label for="cycle_time" class="form-label">Cycle Time (minutes)</label>
+      <input type="number" step="0.01" class="form-control" id="cycle_time" name="cycle_time" value="{{ mold.cycle_time }}" required>
+    </div>
+    <div class="mb-3">
+      <label for="bom" class="form-label">Bill of Materials</label>
+      <textarea class="form-control" id="bom" name="bom" rows="4" required>{{ mold.bom }}</textarea>
+    </div>
+    <div class="mb-3">
+      <label for="num_operators" class="form-label">Number of Operators</label>
+      <input type="number" class="form-control" id="num_operators" name="num_operators" value="{{ mold.num_operators }}" required>
+    </div>
+    
+    <div class="mb-3">
+      <label class="form-label">Current Media Files</label>
+      {% if mold.media %}
+        <div class="row">
+          {% for media in mold.media %}
+            <div class="col-md-4 mb-3">
+              <div class="card">
+                <div class="card-body">
+                  {% if media.media_type=='image' %}
+                    <img src="{{ media.url }}" class="img-fluid mb-2" style="max-height: 150px;" />
+                  {% else %}
+                    <video src="{{ media.url }}" class="w-100 mb-2" style="max-height: 150px;" controls></video>
+                  {% endif %}
+                  <form method="post" action="{{ url_for('delete_media', media_id=media.id) }}" onsubmit="return confirm('Are you sure you want to delete this media file?')">
+                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="text-muted">No media files uploaded.</p>
+      {% endif %}
+    </div>
+    
+    <div class="mb-3">
+      <label for="media" class="form-label">Add New Media Files (Images/Videos)</label>
+      <input type="file" class="form-control" id="media" name="media" multiple accept="image/*,video/*">
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Update Mold</button>
+    <a href="{{ url_for('edit_database') }}" class="btn btn-secondary">Cancel</a>
+  </form>
+{% endblock %}

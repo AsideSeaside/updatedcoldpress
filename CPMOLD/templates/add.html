@@ -1,0 +1,33 @@
+
+{% extends 'base.html' %}
+{% block content %}
+  <h2>Add New Mold</h2>
+  <form method="post" enctype="multipart/form-data">
+    <div class="mb-3">
+      <label for="part_number" class="form-label">Part Number</label>
+      <input type="text" class="form-control" id="part_number" name="part_number" required>
+    </div>
+    <div class="mb-3">
+      <label for="mold_number" class="form-label">Mold Number</label>
+      <input type="text" class="form-control" id="mold_number" name="mold_number" required>
+    </div>
+    <div class="mb-3">
+      <label for="cycle_time" class="form-label">Cycle Time (minutes)</label>
+      <input type="number" step="0.01" class="form-control" id="cycle_time" name="cycle_time" required>
+    </div>
+    <div class="mb-3">
+      <label for="bom" class="form-label">Bill of Materials</label>
+      <textarea class="form-control" id="bom" name="bom" rows="4" required></textarea>
+    </div>
+    <div class="mb-3">
+      <label for="num_operators" class="form-label">Number of Operators</label>
+      <input type="number" class="form-control" id="num_operators" name="num_operators" required>
+    </div>
+    <div class="mb-3">
+      <label for="media" class="form-label">Media Files (Images/Videos)</label>
+      <input type="file" class="form-control" id="media" name="media" multiple accept="image/*,video/*">
+    </div>
+    <button type="submit" class="btn btn-primary">Add Mold</button>
+    <a href="{{ url_for('index') }}" class="btn btn-secondary">Cancel</a>
+  </form>
+{% endblock %}

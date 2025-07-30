@@ -105,47 +105,61 @@ def edit_database():
 
 from sqlalchemy.exc import IntegrityError
 
+
+
 @app.route('/edit/<int:mold_id>', methods=['GET', 'POST'])
 def edit_mold(mold_id):
     mold = Mold.query.get_or_404(mold_id)
 
     if request.method == 'POST':
-        # Update the fields from the form
-        mold.part_number = request.form['part_number']
-        mold.mold_number = request.form['mold_number']
-        mold.cycle_time = float(request.form['cycle_time'])
-        mold.bom = request.form['bom']
+        mold.part_number   = request.form['part_number']
+        mold.mold_number   = request.form['mold_number']
+        mold.cycle_time    = float(request.form['cycle_time'])
+        mold.bom           = request.form['bom']
         mold.num_operators = int(request.form['num_operators'])
 
         try:
-            db.session.commit()   # try to write your changes
+            db.session.commit()
+            flash('✅ Mold updated successfully!', 'success')
+            return redirect(url_for('detail', mold_id=mold.id))
         except IntegrityError:
-            db.session.rollback()  # undo the failed update
-            flash('That mold number is already in use. Please choose a unique mold number.', 'danger')
+            db.session.rollback()
+            flash('❌ That mold number is already in use. Please choose a unique mold number.', 'danger')
             return redirect(url_for('edit_mold', mold_id=mold.id))
 
-        flash('Mold updated successfully!', 'success')
-        return redirect(url_for('detail', mold_id=mold.id))
-
-    # GET: render the edit form populated with existing data
     return render_template('edit.html', mold=mold)
+
 
 
 @app.route('/delete_mold/<int:mold_id>', methods=['POST'])
 def delete_mold(mold_id):
     mold = Mold.query.get_or_404(mold_id)
-    # Delete associated media files
-    for media in mold.media:
-        try:
-            file_path = os.path.join(UPLOAD_FOLDER, media.url.replace('/static/uploads/', ''))
-            if os.path.exists(file_path):
+
+    # 1) delete any uploaded files & their DB records
+    for media in list(mold.media):
+        # remove the file from disk
+        file_path = os.path.join(
+            UPLOAD_FOLDER,
+            media.url.replace('/static/uploads/', '')
+        )
+        if os.path.exists(file_path):
+            try:
                 os.remove(file_path)
-        except Exception as e:
-            flash(f'Error deleting media file: {str(e)}', 'warning')
-    
-    db.session.delete(mold)
-    db.session.commit()
-    flash('Mold deleted successfully!', 'success')
+            except Exception as e:
+                flash(f'Could not delete file {file_path}: {e}', 'warning')
+
+        # now delete the DB record for that media
+        db.session.delete(media)
+
+    # 2) delete the mold itself
+    try:
+        db.session.delete(mold)
+        db.session.commit()
+        flash('Mold deleted successfully!', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Failed to delete mold: {e}', 'danger')
+
     return redirect(url_for('edit_database'))
 
 @app.route('/delete_media/<int:media_id>', methods=['POST'])

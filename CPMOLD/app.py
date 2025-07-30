@@ -170,11 +170,15 @@ def delete_media(media_id):
     flash('Media deleted successfully!', 'success')
     return redirect(url_for('edit_mold', mold_id=mold_id))
 
+from sqlalchemy.exc import IntegrityError
+
 @app.route('/bulk_upload', methods=['GET', 'POST'])
 def bulk_upload():
     if request.method == 'POST':
         file = request.files['excel']
         df = pd.read_excel(file)
+        skipped = 0
+
         for _, row in df.iterrows():
             mold = Mold(
                 part_number=row['part_number'],
@@ -184,11 +188,24 @@ def bulk_upload():
                 num_operators=int(row['num_operators'])
             )
             db.session.add(mold)
-        db.session.commit()
-        flash('Bulk upload complete!', 'success')
-        return redirect(url_for('index'))
-    return render_template('bulk_upload.html')
+            try:
+                # attempt to flush this one row
+                db.session.flush()
+            except IntegrityError:
+                # rollback only this failed insert, keep going
+                db.session.rollback()
+                skipped += 1
 
+        # now commit all the successful ones
+        db.session.commit()
+        flash(
+            f'Bulk upload complete! Skipped {skipped} duplicate(s).',
+            'success'
+        )
+        return redirect(url_for('index'))
+
+    return render_template('bulk_upload.html')
+    
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=3000, debug=True)
 

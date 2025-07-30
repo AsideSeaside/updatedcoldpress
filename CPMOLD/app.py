@@ -103,37 +103,33 @@ def edit_database():
     molds = Mold.query.all()
     return render_template('edit_database.html', molds=molds)
 
-@app.route('/edit_mold/<int:mold_id>', methods=['GET', 'POST'])
+from sqlalchemy.exc import IntegrityError
+
+@app.route('/edit/<int:mold_id>', methods=['GET', 'POST'])
 def edit_mold(mold_id):
     mold = Mold.query.get_or_404(mold_id)
+
     if request.method == 'POST':
+        # Update the fields from the form
         mold.part_number = request.form['part_number']
         mold.mold_number = request.form['mold_number']
         mold.cycle_time = float(request.form['cycle_time'])
         mold.bom = request.form['bom']
         mold.num_operators = int(request.form['num_operators'])
-        
-        # Handle new media files
-        files = request.files.getlist('media')
-        for f in files:
-            if f.filename:
-                ext = f.filename.rsplit('.', 1)[-1].lower()
-                if ext in ALLOWED_EXT:
-                    fname = secure_filename(f.filename)
-                    dest = f"mold_{mold.id}/{fname}"
-                    try:
-                        url = save_file_locally(f, dest)
-                        mtype = 'video' if ext in {'mp4', 'mov'} else 'image'
-                        media = Media(mold_id=mold.id, url=url, media_type=mtype)
-                        db.session.add(media)
-                        flash(f'Successfully uploaded {fname}', 'success')
-                    except Exception as e:
-                        flash(f'Error uploading {fname}: {str(e)}', 'error')
-        
-        db.session.commit()
+
+        try:
+            db.session.commit()   # try to write your changes
+        except IntegrityError:
+            db.session.rollback()  # undo the failed update
+            flash('That mold number is already in use. Please choose a unique mold number.', 'danger')
+            return redirect(url_for('edit_mold', mold_id=mold.id))
+
         flash('Mold updated successfully!', 'success')
-        return redirect(url_for('edit_database'))
-    return render_template('edit_mold.html', mold=mold)
+        return redirect(url_for('detail', mold_id=mold.id))
+
+    # GET: render the edit form populated with existing data
+    return render_template('edit.html', mold=mold)
+
 
 @app.route('/delete_mold/<int:mold_id>', methods=['POST'])
 def delete_mold(mold_id):

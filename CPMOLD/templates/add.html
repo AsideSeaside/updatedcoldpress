@@ -40,27 +40,159 @@
     </tr>
   </thead>
   <tbody>
-    <!-- repeat one TR per process -->
+    <!-- 1. Prefab -->
     <tr>
       <td>Prefab</td>
-      <td>5.52</td>
       <td>
-        <input 
-          type="number" 
-          step="any" 
-          name="actual_Prefab" 
-          class="form-control"
-          placeholder="Enter actual time" />
+        <input type="number" step="any" class="form-control"
+               name="standard_Prefab"
+               {% if mold %} value="{{ mold.process_data['Prefab']['standard'] }}" {% endif %}
+               placeholder="e.g. 5.52" required>
+      </td>
+      <td>
+        <input type="number" step="any" class="form-control"
+               name="actual_Prefab"
+               {% if mold %} value="{{ mold.process_data['Prefab']['actual'] }}" {% endif %}
+               placeholder="Enter actual time">
       </td>
     </tr>
+
+    <!-- 2. Gelcoat -->
     <tr>
       <td>Gelcoat</td>
-      <td>3.20</td>
       <td>
-        <input type="number" step="any" name="actual_Gelcoat" class="form-control"/>
+        <input type="number" step="any" class="form-control"
+               name="standard_Gelcoat"
+               {% if mold %} value="{{ mold.process_data['Gelcoat']['standard'] }}" {% endif %}
+               placeholder="e.g. 3.20" required>
+      </td>
+      <td>
+        <input type="number" step="any" class="form-control"
+               name="actual_Gelcoat"
+               {% if mold %} value="{{ mold.process_data['Gelcoat']['actual'] }}" {% endif %}
+               placeholder="Enter actual time">
       </td>
     </tr>
-    <!-- add rows for Lamination, Foam, Part & Prep, T&G, etc. -->
+
+    <!-- 3. Lamination -->
+    <tr>
+      <td>Lamination</td>
+      <td>
+        <input type="number" step="any" class="form-control"
+               name="standard_Lamination"
+               {% if mold %} value="{{ mold.process_data['Lamination']['standard'] }}" {% endif %}
+               placeholder="e.g. 14.09" required>
+      </td>
+      <td>
+        <input type="number" step="any" class="form-control"
+               name="actual_Lamination"
+               {% if mold %} value="{{ mold.process_data['Lamination']['actual'] }}" {% endif %}
+               placeholder="Enter actual time">
+      </td>
+    </tr>
+
+    <!-- 4. Foam -->
+    <tr>
+      <td>Foam</td>
+      <td>
+        <input type="number" step="any" class="form-control"
+               name="standard_Foam"
+               {% if mold %} value="{{ mold.process_data['Foam']['standard'] }}" {% endif %}
+               placeholder="e.g. 0" required>
+      </td>
+      <td>
+        <input type="number" step="any" class="form-control"
+               name="actual_Foam"
+               {% if mold %} value="{{ mold.process_data['Foam']['actual'] }}" {% endif %}
+               placeholder="Enter actual time">
+      </td>
+    </tr>
+
+    <!-- 5. Part & Prep -->
+    <tr>
+      <td>Part &amp; Prep</td>
+      <td>
+        <input type="number" step="any" class="form-control"
+               name="standard_Part_and_Prep"
+               {% if mold %} value="{{ mold.process_data['Part & Prep']['standard'] }}" {% endif %}
+               placeholder="e.g. 4.23" required>
+      </td>
+      <td>
+        <input type="number" step="any" class="form-control"
+               name="actual_Part_and_Prep"
+               {% if mold %} value="{{ mold.process_data['Part & Prep']['actual'] }}" {% endif %}
+               placeholder="Enter actual time">
+      </td>
+    </tr>
+
+    <!-- 6. T&G -->
+    <tr>
+      <td>T&amp;G</td>
+      <td>
+        <input type="number" step="any" class="form-control"
+               name="standard_TandG"
+               {% if mold %} value="{{ mold.process_data['T&G']['standard'] }}" {% endif %}
+               placeholder="e.g. 3.96" required>
+      </td>
+      <td>
+        <input type="number" step="any" class="form-control"
+               name="actual_TandG"
+               {% if mold %} value="{{ mold.process_data['T&G']['actual'] }}" {% endif %}
+               placeholder="Enter actual time">
+      </td>
+    </tr>
+
+    <!-- 7. Part Inspection -->
+    <tr>
+      <td>Part Inspection</td>
+      <td>
+        <input type="number" step="any" class="form-control"
+               name="standard_Part_Inspection"
+               {% if mold %} value="{{ mold.process_data['Part Inspection']['standard'] }}" {% endif %}
+               placeholder="e.g. 0" required>
+      </td>
+      <td>
+        <input type="number" step="any" class="form-control"
+               name="actual_Part_Inspection"
+               {% if mold %} value="{{ mold.process_data['Part Inspection']['actual'] }}" {% endif %}
+               placeholder="Enter actual time">
+      </td>
+    </tr>
+
+    <!-- 8. QC Check -->
+    <tr>
+      <td>QC Check</td>
+      <td>
+        <input type="number" step="any" class="form-control"
+               name="standard_QC_Check"
+               {% if mold %} value="{{ mold.process_data['QC Check']['standard'] }}" {% endif %}
+               placeholder="e.g. 0" required>
+      </td>
+      <td>
+        <input type="number" step="any" class="form-control"
+               name="actual_QC_Check"
+               {% if mold %} value="{{ mold.process_data['QC Check']['actual'] }}" {% endif %}
+               placeholder="Enter actual time">
+      </td>
+    </tr>
+
+    <!-- 9. Mold repair -->
+    <tr>
+      <td>Mold Repair</td>
+      <td>
+        <input type="number" step="any" class="form-control"
+               name="standard_Mold_repair"
+               {% if mold %} value="{{ mold.process_data['Mold repair']['standard'] }}" {% endif %}
+               placeholder="e.g. 0" required>
+      </td>
+      <td>
+        <input type="number" step="any" class="form-control"
+               name="actual_Mold_repair"
+               {% if mold %} value="{{ mold.process_data['Mold repair']['actual'] }}" {% endif %}
+               placeholder="Enter actual time">
+      </td>
+    </tr>
   </tbody>
 </table>
+
 {% endblock %}

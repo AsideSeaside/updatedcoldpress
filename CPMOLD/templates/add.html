@@ -30,4 +30,37 @@
     <button type="submit" class="btn btn-primary">Add Mold</button>
     <a href="{{ url_for('index') }}" class="btn btn-secondary">Cancel</a>
   </form>
+<h4>Process Times (hrs)</h4>
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Process</th>
+      <th>Standard Time</th>
+      <th>Actual Time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- repeat one TR per process -->
+    <tr>
+      <td>Prefab</td>
+      <td>5.52</td>
+      <td>
+        <input 
+          type="number" 
+          step="any" 
+          name="actual_Prefab" 
+          class="form-control"
+          placeholder="Enter actual time" />
+      </td>
+    </tr>
+    <tr>
+      <td>Gelcoat</td>
+      <td>3.20</td>
+      <td>
+        <input type="number" step="any" name="actual_Gelcoat" class="form-control"/>
+      </td>
+    </tr>
+    <!-- add rows for Lamination, Foam, Part & Prep, T&G, etc. -->
+  </tbody>
+</table>
 {% endblock %}
